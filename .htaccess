@@ -1,0 +1,6 @@
+<Files "_admin.php">
+AuthName "Restricted File"
+AuthType Basic
+AuthUserFile /home/hcooper/blog/livemap/.htpasswd
+require valid-user
+</Files>

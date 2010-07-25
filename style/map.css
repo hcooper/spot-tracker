@@ -1,0 +1,136 @@
+/* Error Box */
+.error {
+text-align: centre;
+width: 250px;
+margin-left: auto;
+margin-right: auto;
+margin-top: 50px;
+background: #FFCCCC;
+padding: 10px;
+font-family: Verdana;
+border-color: black;
+border-width: 1px;
+border-style: solid;
+}
+
+/* Info Box */
+.infobox {
+display: none;
+position: fixed;
+text-align: center;
+width: 250px;
+margin-left: 45%;
+background: #CCFF99;
+padding: 10px;
+font-family: Verdana;
+border-color: black;
+border-width: 1px;
+border-style: solid;
+z-index: 1;
+}
+
+/* Top Title */
+#title {
+  z-index: 1;
+  position: absolute;
+  top: 10px;
+  left: 60px;
+  font-size: 20pt;
+  font-family: Verdana;
+  background: white;
+  opacity: .7;
+  filter: alpha(opacity=70);
+  padding: 1px;
+}
+
+#lastloc {
+  z-index: 1;
+  position: absolute;
+  bottom: 3px;
+  left: 190px;
+  font-size: 11pt;
+  font-family: Verdana;
+  background: white;
+  opacity: .75;
+  filter: alpha(opacity=75);
+  padding: 1px;
+}
+
+
+/* Bottom right box */
+#box1 {
+  z-index: 1;
+  position: absolute;
+  bottom: 3%;
+  right: 1%;
+  font-size: 10pt;
+  font-family: Verdana;
+  background: white;
+  opacity: .65;
+  filter: alpha(opacity=65);
+  padding: 2px;
+}
+
+/* Makes box1 darken
+ * Probably doesn't work in IE - who cares! */
+#box1:hover {
+  opacity: .8;
+  filter: alpha(opacity=80);
+}
+
+/* legend box */
+#legend {
+  z-index: 1;
+  position: absolute;
+  bottom: 8%;
+  right: 1%;
+  font-size: 7pt;
+  font-family: Verdana;
+  background: white;
+  opacity: .65;
+  filter: alpha(opacity=65);
+  padding: 2px;
+  margin-right: auto;
+  margin-left: auto;
+  text-align: center;
+/*  padding: 3px; */
+  width: 50px;
+}
+
+/* Makes box1 darken
+ * Probably doesn't work in IE - who cares! */
+#legend:hover {
+  opacity: .8;
+  filter: alpha(opacity=80);
+}
+
+#box2 {
+  z-index: 1;
+  position: absolute;
+  top: 48px;
+  left: 60px;
+  font-size: 7pt;
+  font-family: Verdana;
+  background: white;
+  opacity: .65;
+  filter: alpha(opacity=65);
+  padding: 2px;
+}
+
+
+#dropbox {
+  z-index: 1;
+  position: absolute;
+  top: 4px;
+  right: 95px;
+  font-size: 7pt;
+  font-family: Verdana;
+  opacity: .90;
+  filter: alpha(opacity=90);
+  padding: 2px;
+}
+
+.pointbox {
+	font-family: Verdana;
+	font-size: 8pt;
+}
