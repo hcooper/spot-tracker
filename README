@@ -1,0 +1,23 @@
+This is mapping system which plots points collected from a SPOT
+personal satellite transmitter.
+
+In simple terms is just checks an email mailbox and parses out
+geographical information, which is submitted to a mysql database.
+
+The second part uses the Google Maps API to plot these points, based on
+various factors such as time or an assigned 'tag'.
+
+#(this bit doesn't really exist yet!)
+#The third part tries to associate images with spot points by correlating
+#exif datestamps with the spot time field, and suggesting the best
+#image for that point.
+
+The forth is an admin interface which lets you manually assign notes
+and images to various points. It then displays them on the map.
+
+Files involved:
+ index.php         -  the website code to plot the data
+ admin.php	   -  the interface to edit points
+ includes/	   -  various important functons and variables
+ bin/		   -  the python script used to check the mailbox
+ sql/		   -  the schema need for the database
