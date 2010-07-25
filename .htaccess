@@ -1,3 +1,5 @@
+# Simple htpasswd setup to protect the admin page
+
 <Files "_admin.php">
 AuthName "Restricted File"
 AuthType Basic
