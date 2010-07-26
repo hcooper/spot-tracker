@@ -19,8 +19,7 @@ if (isset($_GET['tag']) && $_GET['tag'] != "" && $_GET['tag'] != "All") {
 	$plotline = "0";
 }
 
-// Query to return all points for a give tag (in ascending order)
-//$result = mysql_query ("SELECT * FROM `".$unitname."` WHERE tag LIKE \"".$tag."\" order BY time ASC");
+// Main query to return all points for a given tag (in time ascending order)
 $result = cachedSQL("SELECT * FROM `".$unitname."` WHERE tag LIKE \"".$tag."\" order BY time ASC");
 
 // Get the total number of points - used to various things
@@ -28,7 +27,7 @@ $num_rows = mysql_num_rows($result);
 
 // Bail out if there is nothing to plot! (This shouldn't happen now as the default is "All").
 if (!mysql_num_rows($result)) {
-        showniceerror("<b>Error:</b> No data returned from the database!");
+        showniceerror("No data returned from the database!");
 }
 
 // Colour gradient settings. (start_hex_colour, finish_hex_colour, number_of_points)
@@ -133,6 +132,9 @@ while($row = mysql_fetch_array($result)) {
 // End MySQL fetch while loop
 }
 
+// Reset the results points back to zero as it's used again
+mysql_data_seek($result, 0);
+
 
 /////////////////////////////////////////
 //
@@ -140,28 +142,15 @@ while($row = mysql_fetch_array($result)) {
 //
 ////////////////////////////////////////
 
-// Query to fetch all points for a given tag (in descending order)
-// FIX ME -- We shouldn't need to query the DB a second time!
-//           We should just inverse the results of the previous query
-
 // If plotline is enabled, connect the points
 if ($plotline == 1) {
-	$results_for_line = cachedSQL("SELECT * FROM `".$unitname."` WHERE tag LIKE \"".$tag."\" order BY time DESC");
 	echo "\n\nvar polyline = new GPolyline([\n";
-	while($row = mysql_fetch_array($results_for_line))
-		{
-			echo "new GLatLng(".$row['lat'].", ".$row['lng']."),\n";
-	        }
+	while($row = mysql_fetch_array($result)) {
+		echo "new GLatLng(".$row['lat'].", ".$row['lng']."),\n";
+	}
 	echo "], \"#FF0000\", 3);\n";
 	echo "mmap.addOverlay(polyline);\n\n";
 }
-
-//DISABLED WHILST OTHER STUFF IS DEVELOPED
-//      $newest = $_GET["newest"];
-//      if (isset($newest)) {
-//		echo "marker0.bindInfoWindowHtml('<strong>asdasd</strong>');";
-//	}
-
 
 // Determine the zoom level from the bounds
 echo "\nmmap.setZoom(mmap.getBoundsZoomLevel(bounds));\n";
@@ -175,21 +164,6 @@ echo "mmap.setCenter(bounds.getCenter());\n";
 }
 </script>
 </head>
-
-	<?php
-
-// DISABLED WHILST OTHER STUFF IS DEVELOPED
-// Jump to newest point on loading, if newest is passed in the url
-// Otherwise just load normal map
-//      $newest = $_GET["newest"];
-//        if (isset($newest)) {
-//              echo '
-//              <body onLoad="javascript:GEvent.trigger(exml.gmarkers[0],\'click\')"  style="height:100%;margin:0"> ';
-//      } else {
-//                    echo '
-//              <body style="height:100%;margin:0">';
-//        }
-       ?>
 
 <body style="height:100%;margin:0" onload="load()">
         <div id="map" style="width: 100%; height: 100%;"></div>
@@ -242,18 +216,5 @@ echo "mmap.setCenter(bounds.getCenter());\n";
 	</select>
 	</form>
         </div>
-
-	<div id="lastloc">
-		<?php
-			// DISABLE FOR NOW AS NEEDS REDOING
-			// Only show "Last known location" box,
-			// if your not viewing an archived trip
-			//if (isset($_GET["newest"])) {
-			//echo "Last known location: ";
-			//	printLastLoc("ESN:0-7371360","1");
-			//}
-		?>
-	</div>
-
   </body>
 </html>
