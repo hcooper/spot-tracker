@@ -41,18 +41,14 @@ $count=0;
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" style="height:100%">
       
   <head>
-	<link href='http://fonts.googleapis.com/css?family=Molengo' rel='stylesheet' type='text/css' /> 
-	<link href='http://fonts.googleapis.com/css?family=Reenie+Beanie' rel='stylesheet' type='text/css' /> 
-	<link  href="http://fonts.googleapis.com/css?family=IM+Fell+English:regular,italic" rel="stylesheet" type="text/css" /> 
-<link href='http://fonts.googleapis.com/css?family=Crimson+Text' rel='stylesheet' type='text/css'>
-
- 
+	<link href='http://fonts.googleapis.com/css?family=Crimson+Text' rel='stylesheet' type='text/css'>
 	<style type="text/css"> 
 	body {
 	    background-color:#fff;
 	    color:#000;
 	    background-repeat:no-repeat;
 	    background-position:center center;
+		font-family: Verdana;
 	  }
 	  
 	  #wrap {
@@ -97,6 +93,11 @@ $count=0;
     
 	.map {
 	overflow: hidden
+	}
+
+	table {
+		border: 1px solid black;
+		border-collapse:collapse;
 	}
 	
 </style> 
@@ -211,7 +212,7 @@ $count=$count+1;
 ?>
 
 <h1>Livemap</h1>
-<h2>| Admin Interface |</h2>
+<h2>- Admin Interface -</h2>
 <hr>
 <div class="infobox">Details Saved!</div>
 
@@ -244,10 +245,10 @@ $count=$count+1;
 ?>
 <table border="1" id="maintable" name="maintable">
 <tr>
-	<th>Map</th>
+	<th width="100px">Map</th>
+        <th width="100px">Time</th>
 	<th>Lng</th>
 	<th>Lat</th>
-	<th>Time</th>
 	<th>Image URL</th>
 	<th>Notes</th>
 </tr>
@@ -258,9 +259,9 @@ $count=$count+1;
 	while($row = mysql_fetch_array($result)) {
         	echo "<tr name=\"row".$count."\" id=\"row".$count."\">\n";
 		echo "	<td><div class=\"map\" id=\"map".$count."\" style=\"width: 100px; height: 100px;\"></div></td>\n";
+                echo "  <td>".date("jS F Y, g:i a T",$row['time'])."</td>\n";
         	echo "	<td>".round($row['lng'],3)."</td>\n";
 		echo "	<td>".round($row['lat'],3)."</td>\n";
-		echo "	<td>".date("jS F Y, g:i a T",$row['time'])."</td>\n";
 		$loc = $row['lat'].$row['lng'];
 		if ($row['img'] != "") {
 			echo "	<td><img id=\"image".$count."\" class=\"my_image\" height=\"100\" src=\"".$row['img']."\">";
