@@ -41,7 +41,65 @@ $count=0;
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" style="height:100%">
       
   <head>
+	<link href='http://fonts.googleapis.com/css?family=Molengo' rel='stylesheet' type='text/css' /> 
+	<link href='http://fonts.googleapis.com/css?family=Reenie+Beanie' rel='stylesheet' type='text/css' /> 
+	<link  href="http://fonts.googleapis.com/css?family=IM+Fell+English:regular,italic" rel="stylesheet" type="text/css" /> 
+<link href='http://fonts.googleapis.com/css?family=Crimson+Text' rel='stylesheet' type='text/css'>
 
+ 
+	<style type="text/css"> 
+	body {
+	    background-color:#fff;
+	    color:#000;
+	    background-repeat:no-repeat;
+	    background-position:center center;
+	  }
+	  
+	  #wrap {
+	    width:750px;
+	    margin-left:auto;
+	    margin-right:auto;
+	    text-align:center;
+	    margin-top:50px;
+	    padding: 20px;
+	    font-size:15px;
+	    border:1px solid #222;
+	  }
+	  
+    h1 { 
+	  font-family: 'Crimson Text', serif;
+	  font-size: 28px;
+	  font-style: normal;
+	  font-weight: 400;
+	  text-decoration: none;
+	  letter-spacing: 0.5em;
+	  word-spacing: -0.2em;
+	  line-height: 1em;
+    }
+
+    h2 {
+          font-family: 'Crimson Text', serif;
+          font-size: 18px;
+          font-style: normal;
+          font-weight: 400;
+          text-decoration: none;
+/*        text-transform: lowercase; */
+          letter-spacing: 0.5em;
+          word-spacing: -0.2em;
+          line-height: 1em;
+    }
+
+    
+    p {
+      font-family: 'Molengo', arial, serif; 
+      text-align:justify;
+    }
+    
+	.map {
+	overflow: hidden
+	}
+	
+</style> 
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
 
     <link rel="stylesheet" href="style/map.css" type="text/css" media="screen" />
@@ -123,6 +181,7 @@ $count=$count+1;
 </head>
 
 <body onload="load()">
+<div id="wrap">
 
 <?php
 // Detect if this there is an update via POST, and do it if there is one
@@ -151,12 +210,13 @@ $count=$count+1;
 
 ?>
 
-<h1>Livemap Admin</h1>
+<h1>Livemap</h1>
+<h2>| Admin Interface |</h2>
 <hr>
 <div class="infobox">Details Saved!</div>
 
 <div id="adminbox1">
-	<form id="tagbox" action="<?php echo $_SELF;?>" method="get"> Tag:
+	<form id="tagbox" action="<?php echo $_SELF;?>" method="get">Select Tag:
 		<select name="tag" onChange="this.form.submit()">
 		<option></option>
 <?php
@@ -178,14 +238,18 @@ $count=$count+1;
 		</select>
 	</form>
 </div>
+<?php
+	// If no tag is selected don't do print the table
+	if ($num_rows != 0) {
+?>
 <table border="1" id="maintable" name="maintable">
 <tr>
-	<td>Map</td>
-	<td>Lng</td>
-	<td>Lat</td>
-	<td>Time</td>
-	<td>Image URL</td>
-	<td>Notes</td>
+	<th>Map</th>
+	<th>Lng</th>
+	<th>Lat</th>
+	<th>Time</th>
+	<th>Image URL</th>
+	<th>Notes</th>
 </tr>
   <?php
 	// Loop for make maps
@@ -193,7 +257,7 @@ $count=$count+1;
 	$count=0;
 	while($row = mysql_fetch_array($result)) {
         	echo "<tr name=\"row".$count."\" id=\"row".$count."\">\n";
-		echo "	<td><div id=\"map".$count."\" style=\"width: 100px; height: 100px;\"></div></td>\n";
+		echo "	<td><div class=\"map\" id=\"map".$count."\" style=\"width: 100px; height: 100px;\"></div></td>\n";
         	echo "	<td>".round($row['lng'],3)."</td>\n";
 		echo "	<td>".round($row['lat'],3)."</td>\n";
 		echo "	<td>".date("jS F Y, g:i a T",$row['time'])."</td>\n";
@@ -210,7 +274,7 @@ $count=$count+1;
 			<input type=\"hidden\" value=\"".$row['tag']."\" name=\"tag\">
 			<input type=\"hidden\" value=\"".$count."\" name=\"count\">
 			</td>";
-		echo "<td><textarea name=\"notes\">".$row['notes']."</textarea><input type=\"submit\" value=\"Update\"><input type=\"submit\" value=\"Delete\"></form></td>\n";
+		echo "<td><textarea name=\"notes\">".$row['notes']."</textarea><br><input type=\"submit\" value=\"Update\"><input type=\"submit\" value=\"Delete\"></form></td>\n";
 		echo "</tr>\n\n";
 		$count=$count+1;
         }
@@ -218,5 +282,9 @@ $count=$count+1;
   ?>
 
 </table>
+<?php
+	}
+?>
+</div>
 </body>
 </html>
