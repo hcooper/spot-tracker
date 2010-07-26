@@ -39,76 +39,12 @@ $count=0;
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
       
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" style="height:100%">
-      
-  <head>
-	<link href='http://fonts.googleapis.com/css?family=Crimson+Text' rel='stylesheet' type='text/css'>
-	<style type="text/css"> 
-	body {
-	    background-color:#fff;
-	    color:#000;
-	    background-repeat:no-repeat;
-	    background-position:center center;
-		font-family: Verdana;
-	  }
-	  
-	  #wrap {
-	    width:750px;
-	    margin-left:auto;
-	    margin-right:auto;
-	    text-align:center;
-	    margin-top:50px;
-	    padding: 20px;
-	    font-size:15px;
-	    border:1px solid #222;
-	  }
-	  
-    h1 { 
-	  font-family: 'Crimson Text', serif;
-	  font-size: 28px;
-	  font-style: normal;
-	  font-weight: 400;
-	  text-decoration: none;
-	  letter-spacing: 0.5em;
-	  word-spacing: -0.2em;
-	  line-height: 1em;
-    }
-
-    h2 {
-          font-family: 'Crimson Text', serif;
-          font-size: 18px;
-          font-style: normal;
-          font-weight: 400;
-          text-decoration: none;
-/*        text-transform: lowercase; */
-          letter-spacing: 0.5em;
-          word-spacing: -0.2em;
-          line-height: 1em;
-    }
-
-    
-    p {
-      font-family: 'Molengo', arial, serif; 
-      text-align:justify;
-    }
-    
-	.map {
-	overflow: hidden
-	}
-
-	table {
-		border: 1px solid black;
-		border-collapse:collapse;
-	}
-	
-</style> 
-    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
-
-    <link rel="stylesheet" href="style/map.css" type="text/css" media="screen" />
-    
-    <title>Live Tracking Map [Admin]</title>
-    
-    <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAKgG0R3M9OxpxGiBKm4inbhTJR35ebiLeByqbVSzBszWxVTR5ZxR93MDkF8UAWN222OFV6DTaoe3zHw" type="text/javascript"></script>
-	<script src="javascript/mapiconmaker.js" type="text/javascript"></script>
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+		<link href='style/admin.css' rel='stylesheet' type='text/css'>
+    		<title>Live Map || Admin</title>
+    		<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAKgG0R3M9OxpxGiBKm4inbhTJR35ebiLeByqbVSzBszWxVTR5ZxR93MDkF8UAWN222OFV6DTaoe3zHw" type="text/javascript"></script>
+		<script src="javascript/mapiconmaker.js" type="text/javascript"></script>
 
     <script type="text/javascript">
     //<![CDATA[
@@ -140,10 +76,9 @@ while($row = mysql_fetch_array($result)) {
 } // end of onLoad()
 </script>
 
-    <script type="text/javascript" src="javascript/jquery-1.3.2.min.js"></script> 
-    <script type="text/javascript" src="javascript/jquery.form.js"></script> 
-
-    <script type="text/javascript"> 
+	<script type="text/javascript" src="javascript/jquery-1.3.2.min.js"></script> 
+	<script type="text/javascript" src="javascript/jquery.form.js"></script> 
+	<script type="text/javascript"> 
         // wait for the DOM to be loaded 
         $(document).ready(function() {
          
@@ -153,7 +88,7 @@ while($count < $num_rows) {
 ?>
 
 
-// When the text box contents is changed, reload the image and turn the row green
+		// Reload images & change row color on text field change
 <?php
 echo "		$('#imgurl".$count."').change(function() {\n";
 echo "			image".$count.".src = document.form".$count.".imgurl".$count.".value;\n";
@@ -162,7 +97,7 @@ echo "		});";
 ?>
        		
 
-// When the form is submittted reset the row color and pop up the notification box
+		// Reset colour and trigger popup when submit clicked
 <?php
 echo "		$('#form".$count."').ajaxForm(function() {\n";
 echo "			document.getElementById('row".$count."').style.backgroundColor='#ffffff';\n";
@@ -211,11 +146,15 @@ $count=$count+1;
 
 ?>
 
-<h1>Livemap</h1>
-<h2>- Admin Interface -</h2>
-<hr>
+<div id="header">
+	<h1>Livemap</h1>
+	<h2>- Admin Interface -</h2>
+</div>
+
+<!-- Magic dix which appears when submit is clicked -->
 <div class="infobox">Details Saved!</div>
 
+<br>
 <div id="adminbox1">
 	<form id="tagbox" action="<?php echo $_SELF;?>" method="get">Select Tag:
 		<select name="tag" onChange="this.form.submit()">
@@ -225,20 +164,20 @@ $count=$count+1;
 	$tagresult = cachedSQL("SELECT DISTINCT tag FROM `".$unitname."`");
 	while($tagrow = mysql_fetch_array($tagresult)) {
 		if ($tagrow['tag']==$tag) {
-		echo "<option selected>".
+echo "		<option selected>".
 	        $tagrow['tag'].
-		"</option>";
+		"</option>\n";
 		} else {
-		echo "<option>".
+echo "		<option>".
 		$tagrow['tag'].
-		"</option>";
+		"</option>\n";
 		}
 	}
 ?>
-
 		</select>
 	</form>
 </div>
+<br>
 <?php
 	// If no tag is selected don't do print the table
 	if ($num_rows != 0) {
@@ -252,14 +191,15 @@ $count=$count+1;
 	<th>Image URL</th>
 	<th>Notes</th>
 </tr>
-  <?php
+
+<?php
 	// Loop for make maps
 	$result = cachedSQL("SELECT * FROM `".$unitname."` WHERE tag LIKE \"".$tag."\" order BY time ASC");
 	$count=0;
 	while($row = mysql_fetch_array($result)) {
         	echo "<tr name=\"row".$count."\" id=\"row".$count."\">\n";
 		echo "	<td><div class=\"map\" id=\"map".$count."\" style=\"width: 100px; height: 100px;\"></div></td>\n";
-                echo "  <td>".date("jS F Y, g:i a T",$row['time'])."</td>\n";
+                echo "	<td>".date("jS F Y, g:i a T",$row['time'])."</td>\n";
         	echo "	<td>".round($row['lng'],3)."</td>\n";
 		echo "	<td>".round($row['lat'],3)."</td>\n";
 		$loc = $row['lat'].$row['lng'];
@@ -274,8 +214,8 @@ $count=$count+1;
 			<input type=\"text\" value=\"".$row['img']."\" name=\"imgurl\" id=\"imgurl".$count."\">
 			<input type=\"hidden\" value=\"".$row['tag']."\" name=\"tag\">
 			<input type=\"hidden\" value=\"".$count."\" name=\"count\">
-			</td>";
-		echo "<td><textarea name=\"notes\">".$row['notes']."</textarea><br><input type=\"submit\" value=\"Update\"><input type=\"submit\" value=\"Delete\"></form></td>\n";
+	</td>\n";
+		echo "	<td><textarea name=\"notes\">".$row['notes']."</textarea><br><input type=\"submit\" value=\"Update\"><input type=\"submit\" value=\"Delete\"></form></td>\n";
 		echo "</tr>\n\n";
 		$count=$count+1;
         }
