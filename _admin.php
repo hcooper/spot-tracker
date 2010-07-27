@@ -119,8 +119,6 @@ echo "          $('#note".$count."').change(function() {\n";
 echo "                  document.getElementById('row".$count."').style.backgroundColor='#CAFF70';\n";
 echo "          });\n";
 
-
-
 $count=$count+1;
 }
 ?>     		 
@@ -146,8 +144,7 @@ echo $_POST['newtag'];
                                 "` SET img =\"".$_POST['imgurl'].
                                 "\", notes = \"".$stripped_notes.
                                 "\", tag = \"".$_POST['newtag'].
-                                "\" WHERE lat=\"".$_POST['lat'].
-                                "\" AND lng=\"".$_POST['lng']."\"";
+                                "\" WHERE id=\"".$_POST['id']."\"";
 
                 if (mysql_query($updatequery)) {
 // DISABLED AS USING jQuery now
@@ -166,7 +163,7 @@ echo $_POST['newtag'];
 	<h2>- Admin Interface -</h2>
 </div>
 
-<!-- Magic dix which appears when submit is clicked -->
+<!-- Magic div which appears when submit is clicked -->
 <div class="infobox">Details Saved!</div>
 
 <br>
@@ -213,7 +210,7 @@ echo "		<option>".
 	$result = cachedSQL("SELECT * FROM `".$unitname."` WHERE tag LIKE \"".$tag."\" order BY time ASC");
 	$count=0;
 	while($row = mysql_fetch_array($result)) {
-        	echo "<tr name=\"row".$count."\" id=\"row".$count."\">\n";
+        	echo "<tr id=\"row".$count."\">\n";
 		echo "	<td><div class=\"map\" id=\"map".$count."\" style=\"width: 100px; height: 100px;\"></div></td>\n";
                 echo "	<td>".date("jS F Y, g:i a T",$row['time'])."</td>\n";
         	echo "	<td>".round($row['lng'],3)."</td>\n";
@@ -225,21 +222,20 @@ echo "		<option>".
 			echo "	<td><img id=\"image".$count."\" class=\"my_image\" height=\"100\" src=\"images/no-image.gif\">";
 		}
 		echo "\n\n	<form id=\"form".$count."\" name=\"form".$count."\" class=\"updater\" method=\"post\" action=\"".$_SELF."\">
-			<input type=\"hidden\" value=\"".$row['lng']."\" name=\"lng\">
-			<input type=\"hidden\" value=\"".$row['lat']."\" name=\"lat\">
+			<input type=\"hidden\" value=\"".$row['id']."\" name=\"id\">
 			<input type=\"text\" value=\"".$row['img']."\" name=\"imgurl\" id=\"imgurl".$count."\">
-			<input type=\"hidden\" value=\"".$row['tag']."\" name=\"tag\">
-			<input type=\"hidden\" value=\"".$count."\" name=\"count\">
 	</td>\n";
 		echo "	<td>
 			<textarea id=\"notes".$count."\" name=\"notes\">".$row['notes']."</textarea>
 			<br>
 			<input type=\"submit\" value=\"Update\">
+			<!-- To Be Implimented
 			<input type=\"submit\" value=\"Delete\">
+			-->
 			<br>
 			<input type=\"text\" name=\"newtag\" value=\"".$row['tag']."\" id=\"tag".$count."\">
-			</form>
-			</td>\n";
+		</form>
+	</td>\n";
 		echo "</tr>\n\n";
 		$count=$count+1;
         }
