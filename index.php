@@ -51,24 +51,22 @@ $gradient=gradient($gradstart,$gradend,$num_rows);
 
 	<script type="text/javascript">
 
-    //<![CDATA[
+		//<![CDATA[
 
-function load() {
-  if (GBrowserIsCompatible()) {
-
-    var mmap = new GMap2(document.getElementById("map"));
-    mmap.setCenter(new GLatLng(0,0),2);
-    var bounds = new GLatLngBounds();
-    mmap.setMapType(G_PHYSICAL_MAP);
-    mmap.addControl(new GScaleControl());
-    mmap.addControl(new GLargeMapControl());
-    mmap.addControl(new GMenuMapTypeControl());
-    mmap.addMapType(G_PHYSICAL_MAP) ;
-    mmap.enableScrollWheelZoom();
-
+		function load() {
+			if (GBrowserIsCompatible()) {
+				var mmap = new GMap2(document.getElementById("map"));
+				mmap.setCenter(new GLatLng(0,0),2);
+				var bounds = new GLatLngBounds();
+				mmap.setMapType(G_PHYSICAL_MAP);
+				mmap.addControl(new GScaleControl());
+				mmap.addControl(new GLargeMapControl());
+				mmap.addControl(new GMenuMapTypeControl());
+				mmap.addMapType(G_PHYSICAL_MAP) ;
+				mmap.enableScrollWheelZoom();
 
 <?php
-
+//
 // Start a counter for each point
 $count=0;
 
@@ -77,39 +75,39 @@ while($row = mysql_fetch_array($result)) {
 
 	// Image Points
 	if ($row['img']!="") {
-		echo "\nvar newIcon".$count." = MapIconMaker.createMarkerIcon(".
+	        $map_javascript .=  "\nvar newIcon".$count." = MapIconMaker.createMarkerIcon(".
 		"{width: ".$iconsize.", height: ".$iconsize.", primaryColor: \"#".$photocolour."\"});\n";	
 
 	// Last Point
 	} elseif ($count==$num_rows-1) {
-		echo "\nvar newIcon".$count." = MapIconMaker.createMarkerIcon(".
+		$map_javascript .= "\nvar newIcon".$count." = MapIconMaker.createMarkerIcon(".
 		"{width: ".$iconsize.", height: ".$iconsize.", primaryColor: \"#".$gradient[$count]."\"});\n";
 
 	// First Point
 	} elseif ($count=="0") {
-		echo "\nvar newIcon".$count." = MapIconMaker.createMarkerIcon(".
+		$map_javascript .= "\nvar newIcon".$count." = MapIconMaker.createMarkerIcon(".
 		"{width: ".$iconsize.", height: ".$iconsize.", primaryColor: \"#".$gradient[$count]."\"});\n";
 
 	// Other Points
 	} else {
-		echo "\nvar newIcon".$count." = MapIconMaker.createMarkerIcon(".
+		$map_javascript .= "\nvar newIcon".$count." = MapIconMaker.createMarkerIcon(".
 		"{width: ".$iconsize.", height: ".$iconsize.", primaryColor: \"#".$gradient[$count]."\"});\n";
  	}
 
-	 echo "var position".$count." = new GLatLng(".$row['lat'].", ".$row['lng'].");\n";
-	 echo "var marker".$count." = new GMarker(position".$count.", {icon: newIcon".$count."});\n";
-	 echo "mmap.addOverlay(marker".$count.");\n";
-	 echo "bounds.extend(position".$count.");\n\n";
-	 echo "marker".$count.".bindInfoWindowHtml('<div class=\"pointbox\">";
+	 $map_javascript .= "var position".$count." = new GLatLng(".$row['lat'].", ".$row['lng'].");\n";
+	 $map_javascript .= "var marker".$count." = new GMarker(position".$count.", {icon: newIcon".$count."});\n";
+	 $map_javascript .= "mmap.addOverlay(marker".$count.");\n";
+	 $map_javascript .= "bounds.extend(position".$count.");\n\n";
+	 $map_javascript .= "marker".$count.".bindInfoWindowHtml('<div class=\"pointbox\">";
 
 
 // Check if there's an image to display for that point
 	if ($row['img']!="") {
-		 echo "<img src=\"".$row['img']."\"><br>";
+		 $map_javascript .= "<img src=\"".$row['img']."\"><br>";
  	}
 
 // Print the message, location details and time
-	echo "<center><b>Msg: </b>".
+	$map_javascript .= "<center><b>Msg: </b>".
 		$row['type'].
 		" <b>Time: </b>"
 		.date("jS F Y, g:i a T", $row['time']).
@@ -120,11 +118,12 @@ while($row = mysql_fetch_array($result)) {
 		"<br><b>Tag:</b> ".	
 		$row['tag'];
 		if ($row['notes'] != "") {
-			echo "<br><b>Notes:</b> ".
+			$map_javascript .= "<br><b>Notes:</b> ".
 			$row['notes'];
 		}
-	echo"</div></center>');
+	$map_javascript .= "</div></center>');
 		";
+	$line_javascript .= "new GLatLng(".$row['lat'].", ".$row['lng']."),\n";
 
 // Increment count for the next point to plot
 	$count=$count+1;
@@ -132,9 +131,9 @@ while($row = mysql_fetch_array($result)) {
 // End MySQL fetch while loop
 }
 
-// Reset the results points back to zero as it's used again
-mysql_data_seek($result, 0);
 
+// Print all the map rendering javascript created in the while loop above
+echo $map_javascript;
 
 /////////////////////////////////////////
 //
@@ -144,12 +143,10 @@ mysql_data_seek($result, 0);
 
 // If plotline is enabled, connect the points
 if ($plotline == 1) {
-	echo "\n\nvar polyline = new GPolyline([\n";
-	while($row = mysql_fetch_array($result)) {
-		echo "new GLatLng(".$row['lat'].", ".$row['lng']."),\n";
-	}
-	echo "], \"#FF0000\", 3);\n";
-	echo "mmap.addOverlay(polyline);\n\n";
+	$line_javascript = "\n\nvar polyline = new GPolyline([\n" . $line_javascript;
+	$line_javascript .= "], \"#FF0000\", 3);\n";
+	$line_javascript .= "mmap.addOverlay(polyline);\n\n";
+	echo $line_javascript;
 }
 
 // Determine the zoom level from the bounds
@@ -194,7 +191,7 @@ echo "mmap.setCenter(bounds.getCenter());\n";
 
 	while($tagrow = mysql_fetch_array($tagresult)) {
                if ($tagrow['tag']==$tag && $tag != "All") {
-                echo "<option selected>".
+               	echo "<option selected>".
                 $tagrow['tag'].
                 "</option>\n";
                 } else {
@@ -212,6 +209,7 @@ echo "mmap.setCenter(bounds.getCenter());\n";
 		}
 
 ?>
+
 
 	</select>
 	</form>

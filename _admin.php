@@ -55,23 +55,24 @@ function load() {
 <?php
 $num_rows = mysql_num_rows($result);
 $count=0;
+$map_javascript = "";
 while($row = mysql_fetch_array($result)) {
-	echo "var map".$count." = new GMap2(document.getElementById(\"map".$count."\"));\n";
-	echo "map".$count.".setCenter(new GLatLng(0,0),2);\n";
-	echo "var bounds = new GLatLngBounds();\n";
-	echo "map".$count.".setMapType(G_PHYSICAL_MAP);\n";
-	echo "map".$count.".enableScrollWheelZoom();\n";
-	echo "var newIcon".$count." = MapIconMaker.createMarkerIcon({width: 32, height: 32, primaryColor: \"#".$gradient[$count]."\"});\n";
-	echo "var position".$count." = new GLatLng(".$row['lat'].", ".$row['lng'].");\n";
-	echo "var marker".$count." = new GMarker(position".$count.", {icon: newIcon".$count."});\n";
-	echo "map".$count.".addOverlay(marker".$count.");\n";
-	echo "bounds.extend(position".$count.");\n\n";
-	echo "map".$count.".setZoom(map".$count.".getBoundsZoomLevel(bounds));\n";
-	echo "map".$count.".setCenter(bounds.getCenter());\n\n";
+	$map_javascript .= "var map".$count." = new GMap2(document.getElementById(\"map".$count."\"));\n";
+	$map_javascript .= "map".$count.".setCenter(new GLatLng(0,0),2);\n";
+	$map_javascript .= "var bounds = new GLatLngBounds();\n";
+	$map_javascript .= "map".$count.".setMapType(G_PHYSICAL_MAP);\n";
+	$map_javascript .= "map".$count.".enableScrollWheelZoom();\n";
+	$map_javascript .= "var newIcon".$count." = MapIconMaker.createMarkerIcon({width: 32, height: 32, primaryColor: \"#".$gradient[$count]."\"});\n";
+	$map_javascript .= "var position".$count." = new GLatLng(".$row['lat'].", ".$row['lng'].");\n";
+	$map_javascript .= "var marker".$count." = new GMarker(position".$count.", {icon: newIcon".$count."});\n";
+	$map_javascript .= "map".$count.".addOverlay(marker".$count.");\n";
+	$map_javascript .= "bounds.extend(position".$count.");\n\n";
+	$map_javascript .= "map".$count.".setZoom(map".$count.".getBoundsZoomLevel(bounds));\n";
+	$map_javascript .= "map".$count.".setCenter(bounds.getCenter());\n\n";
 	$count=$count+1;
 }
+echo $map_javascript;
 ?>
-
   } // end of GCompat
 } // end of onLoad()
 </script>
