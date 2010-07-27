@@ -94,7 +94,7 @@ while($count < $num_rows) {
 echo "		$('#imgurl".$count."').change(function() {\n";
 echo "			image".$count.".src = document.form".$count.".imgurl".$count.".value;\n";
 echo "			document.getElementById('row".$count."').style.backgroundColor='#CAFF70';\n";
-echo "		});";
+echo "		});\n";
 ?>
        		
 
@@ -106,7 +106,20 @@ echo "			$(\"div.infobox:hidden\").slideDown(\"slow\");\n";
 echo "				window.setTimeout(function() {\n";
 echo "				$(\"div.infobox:visible\").slideUp(\"slow\");\n";
 echo "			}, 1500);\n";
-echo "		});";
+echo "		});\n";
+?>
+
+                // Reset colour and trigger popup when submit clicked
+<?php
+echo "          $('#tag".$count."').change(function() {\n";
+echo "                  document.getElementById('row".$count."').style.backgroundColor='#CAFF70';\n";
+echo "          });\n";
+
+echo "          $('#note".$count."').change(function() {\n";
+echo "                  document.getElementById('row".$count."').style.backgroundColor='#CAFF70';\n";
+echo "          });\n";
+
+
 
 $count=$count+1;
 }
@@ -121,6 +134,7 @@ $count=$count+1;
 <div id="wrap">
 
 <?php
+echo $_POST['newtag'];
 // Detect if this there is an update via POST, and do it if there is one
         if (isset($_POST['imgurl']) && isset($_POST['notes'])) {
 
@@ -131,9 +145,9 @@ $count=$count+1;
                 $updatequery =  "UPDATE `".$unitname.
                                 "` SET img =\"".$_POST['imgurl'].
                                 "\", notes = \"".$stripped_notes.
+                                "\", tag = \"".$_POST['newtag'].
                                 "\" WHERE lat=\"".$_POST['lat'].
-                                "\" AND lng=\"".$_POST['lng'].
-                                "\" AND tag=\"".$_POST['tag']."\"";
+                                "\" AND lng=\"".$_POST['lng']."\"";
 
                 if (mysql_query($updatequery)) {
 // DISABLED AS USING jQuery now
@@ -176,6 +190,7 @@ echo "		<option>".
 	}
 ?>
 		</select>
+		<br>
 	</form>
 </div>
 <br>
@@ -209,14 +224,22 @@ echo "		<option>".
 		} else {
 			echo "	<td><img id=\"image".$count."\" class=\"my_image\" height=\"100\" src=\"images/no-image.gif\">";
 		}
-		echo "\n\n	<form id=\"form".$count."\" name=\"form".$count."\" class=\"updater\" method=\"post\"action=\"".$_SELF."\">
+		echo "\n\n	<form id=\"form".$count."\" name=\"form".$count."\" class=\"updater\" method=\"post\" action=\"".$_SELF."\">
 			<input type=\"hidden\" value=\"".$row['lng']."\" name=\"lng\">
 			<input type=\"hidden\" value=\"".$row['lat']."\" name=\"lat\">
 			<input type=\"text\" value=\"".$row['img']."\" name=\"imgurl\" id=\"imgurl".$count."\">
 			<input type=\"hidden\" value=\"".$row['tag']."\" name=\"tag\">
 			<input type=\"hidden\" value=\"".$count."\" name=\"count\">
 	</td>\n";
-		echo "	<td><textarea name=\"notes\">".$row['notes']."</textarea><br><input type=\"submit\" value=\"Update\"><input type=\"submit\" value=\"Delete\"></form></td>\n";
+		echo "	<td>
+			<textarea id=\"notes".$count."\" name=\"notes\">".$row['notes']."</textarea>
+			<br>
+			<input type=\"submit\" value=\"Update\">
+			<input type=\"submit\" value=\"Delete\">
+			<br>
+			<input type=\"text\" name=\"newtag\" value=\"".$row['tag']."\" id=\"tag".$count."\">
+			</form>
+			</td>\n";
 		echo "</tr>\n\n";
 		$count=$count+1;
         }
